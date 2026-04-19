@@ -1,7 +1,7 @@
 ﻿"use client"
 
-import { isManual, isStripeLike } from "@lib/constants"
-import { placeOrder, completeCartForPayU } from "@lib/data/cart"
+import { isManual, isStripeLike } from "../../../../lib/constants"
+import { placeOrder } from "../../../../lib/data/cart"
 import { HttpTypes } from "@/types/types-compat"
 import { Button } from "@/components/ui"
 import { convertMinorAmount, getCurrencyForCountry } from "@lib/util/currency"
@@ -106,8 +106,8 @@ const StripePaymentButton = ({
 
   const onPaymentCompleted = async () => {
     await placeOrder()
-      .catch((err) => {
-        setErrorMessage(err.message)
+      .catch((err: unknown) => {
+        setErrorMessage(err instanceof Error ? err.message : "Payment failed")
       })
       .finally(() => {
         setSubmitting(false)
@@ -119,7 +119,7 @@ const StripePaymentButton = ({
   const card = elements?.getElement("card")
 
   const session = cart.payment_collection?.payment_sessions?.find(
-    (s) => s.status === "pending"
+    (s: any) => s.status === "pending"
   )
 
   const disabled = !stripe || !elements ? true : false
@@ -132,8 +132,15 @@ const StripePaymentButton = ({
       return
     }
 
+    const clientSecret = session?.data?.client_secret as string | undefined
+    if (!clientSecret) {
+      setErrorMessage("Missing payment session. Please try selecting payment method again.")
+      setSubmitting(false)
+      return
+    }
+
     await stripe
-      .confirmCardPayment(session?.data.client_secret as string, {
+      .confirmCardPayment(clientSecret, {
         payment_method: {
           card: card,
           billing_details: {

@@ -1,11 +1,17 @@
 "use client"
 
-import { Button } from "@/components/ui"
-import { HttpTypes } from "@/types/types-compat"
 import { useState } from "react"
 
+type BaseCart = {
+  id: string
+  item_subtotal?: number | null
+  shipping_total?: number | null
+  total?: number | null
+  currency_code?: string | null
+}
+
 type BasePaymentWrapperProps = {
-  cart: HttpTypes.StoreCart
+  cart: BaseCart
   children: React.ReactNode
 }
 
@@ -93,9 +99,14 @@ export default function BasePaymentWrapper({ cart, children }: BasePaymentWrappe
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
         <div>
-          <Button type="button" onClick={verifyTransaction} isLoading={verifying}>
-            Verify Base Payment
-          </Button>
+          <button
+            type="button"
+            onClick={verifyTransaction}
+            disabled={verifying}
+            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {verifying ? "Verifying..." : "Verify Base Payment"}
+          </button>
         </div>
         {verifyMessage && <p className="text-sm text-gray-600">{verifyMessage}</p>}
       </div>

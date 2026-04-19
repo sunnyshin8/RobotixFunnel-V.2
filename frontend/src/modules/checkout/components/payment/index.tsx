@@ -1,8 +1,8 @@
 ﻿"use client"
 
 import { Radio, RadioGroup } from "@headlessui/react"
-import { isStripeLike, paymentInfoMap } from "@lib/constants"
-import { initiatePaymentSession, createPaymentCollection, createPaymentSession } from "@lib/data/cart"
+import { isStripeLike, paymentInfoMap } from "../../../../lib/constants"
+import { initiatePaymentSession, createPaymentCollection, createPaymentSession } from "../../../../lib/data/cart"
 import { CheckCircle2, CreditCard } from "lucide-react"
 import { Button, Heading, Text, clx } from "@/components/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -15,15 +15,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 // Bank details type from admin settings
-interface BankDetails {
-  bankName: string
-  iban: string
-  beneficiary: string
-  bankDetails: string
-  cui?: string
-}
-
-// Payment method from admin settings API
 interface PaymentSetting {
   id: string
   name: string
@@ -93,8 +84,8 @@ const Payment = ({
 
   // Methods are now derived from backend provider list + active session.
   const isCodActive = true
-  const bankSetting: PaymentSetting | undefined = undefined
-  const isBankActive = false
+  const [bankSetting] = useState<PaymentSetting | null>(null)
+  const isBankActive = Boolean(bankSetting)
   const isCardActive = (availablePaymentMethods || []).some((paymentMethod) => isStripeLike(paymentMethod.id))
   const isPayuActive = payuEnabledByConfig || hasPayuProvider || selectedPaymentMethod === "payu-card"
   const isBaseActive = baseEnabledByConfig || hasBaseProvider || selectedPaymentMethod === "base-crypto"
@@ -375,10 +366,7 @@ const Payment = ({
           level="h2"
           className={clx(
             "flex flex-row text-2xl font-bold text-gray-900 gap-x-2 items-baseline",
-            {
-              "opacity-50 pointer-events-none select-none":
-                !isOpen && !paymentReady,
-            }
+            !isOpen && !paymentReady ? "opacity-50 pointer-events-none select-none" : ""
           )}
         >
           <span className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm">3</span>
@@ -461,34 +449,7 @@ const Payment = ({
                       )}
                     </Radio>
                   )}
-                  {isBankActive && bankSetting && (
-                    <Radio
-                      value="bank-transfer"
-                      className="flex items-start gap-x-3 p-4 bg-gray-100 border border-gray-200 rounded-xl mb-3 hover:border-blue-500 transition cursor-pointer"
-                    >
-                      {({ checked }: { checked: boolean }) => (
-                        <div className="flex items-start gap-3 w-full">
-                          <div className={clx(
-                            "w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5",
-                            checked ? "border-blue-500 bg-blue-600" : "border-gray-300"
-                          )}>
-                            {checked && <div className="w-2 h-2 bg-white rounded-full" />}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-gray-900 font-medium">🏦 Bank Transfer</span>
-                            </div>
-                            <p className="text-gray-600 text-sm">You'll receive bank details by email after placing the order</p>
-                            <div className="mt-2 p-3 bg-gray-200/50 rounded-lg text-xs text-gray-600">
-                              {bankSetting.iban && <p><strong className="text-gray-900">IBAN:</strong> {bankSetting.iban}</p>}
-                              {bankSetting.beneficiary && <p><strong className="text-gray-900">Beneficiary:</strong> {bankSetting.beneficiary}</p>}
-                              {bankSetting.bankName && <p><strong className="text-gray-900">Bank:</strong> {bankSetting.bankName}</p>}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </Radio>
-                  )}
+                  {isBankActive && bankSetting ? null : null}
                   {isPayuActive && (
                     <Radio
                       value="payu-card"

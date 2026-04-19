@@ -1,0 +1,10 @@
+export const carts: any = {}
+export const cartItems: any = {}
+export const products: any = {}
+export const productVariants: any = {}
+export const shippingOptions: any = {}
+export const paymentCollections: any = {}
+export const paymentSessions: any = {}
+export const orders: any = {}
+export const orderItems: any = {}
+export const promotions: any = {}

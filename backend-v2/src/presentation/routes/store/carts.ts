@@ -1,6 +1,5 @@
-import type { FastifyInstance, FastifyRequest } from "fastify";
-import type { Container } from "../../../container.js";
-import { db } from "../../../infrastructure/database/connection.js";
+import type { FastifyInstance } from "fastify";
+import { db } from "../../../infrastructure/database/connection";
 import {
   carts,
   cartItems,
@@ -12,7 +11,7 @@ import {
   orders,
   orderItems,
   promotions,
-} from "../../../infrastructure/database/schema/index.js";
+} from "../../../infrastructure/database/schema/index";
 import { eq, and, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
@@ -28,7 +27,7 @@ async function getFullCart(cartId: string) {
 
   // Get variant details for each item
   const enrichedItems = await Promise.all(
-    items.map(async (item) => {
+    items.map(async (item: any) => {
       const [variant] = await db
         .select()
         .from(productVariants)
@@ -131,7 +130,7 @@ async function getFullCart(cartId: string) {
         status: pc.status,
         amount: pc.amount,
         currency_code: pc.currencyCode,
-        payment_sessions: sessions.map((s) => ({
+        payment_sessions: sessions.map((s: any) => ({
           id: s.id,
           provider_id: s.providerId,
           status: s.status,
@@ -172,7 +171,7 @@ async function getFullCart(cartId: string) {
 
 async function recalculateCart(cartId: string) {
   const items = await db.select().from(cartItems).where(eq(cartItems.cartId, cartId));
-  const subtotal = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  const subtotal = items.reduce((sum: any, item: any) => sum + item.unitPrice * item.quantity, 0);
 
   const [cart] = await db.select().from(carts).where(eq(carts.id, cartId)).limit(1);
   const shippingTotal = cart?.shippingTotal ?? 0;
@@ -188,7 +187,7 @@ async function recalculateCart(cartId: string) {
 
 export async function cartRoutes(
   fastify: FastifyInstance,
-  opts: { container: Container }
+  _opts: { container: unknown }
 ) {
   // POST /store/carts — Create a new cart
   fastify.post("/carts", async (request) => {
@@ -500,7 +499,7 @@ export async function cartRoutes(
         shipping_total: order.shippingTotal,
         tax_total: order.taxTotal,
         total: order.total,
-        items: oItems.map((i) => ({
+        items: oItems.map((i: any) => ({
           id: i.id,
           order_id: i.orderId,
           product_id: i.productId,

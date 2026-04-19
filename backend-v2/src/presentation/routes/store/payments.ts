@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify";
-import type { Container } from "../../../container.js";
 import { config } from "../../../config/index.js";
 
 type VerifyBaseBody = {
@@ -54,7 +53,7 @@ async function rpcCall<T>(method: string, params: unknown[]) {
 
 export async function paymentRoutes(
   fastify: FastifyInstance,
-  _opts: { container: Container }
+  _opts: { container: unknown }
 ) {
   fastify.post("/payments/verify-base", async (request, reply) => {
     const body = (request.body || {}) as VerifyBaseBody;
