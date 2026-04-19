@@ -1,4 +1,4 @@
-# 🤖 RobotixFunnel — AI-Powered Robotised E-Commerce Platform
+# 🤖 RobotixFunnel : AI-Powered Robotised E-Commerce Platform
 
 
 **RobotixFunnel** is a full-stack, AI-powered e-commerce platform with a real-time **Digital Twin Warehouse** featuring autonomous AGV robots, an **AI chatbot** shopping assistant, and a complete **admin panel** — built for the Romanian & European electronics market.
@@ -52,7 +52,7 @@ RobotixFunnel/
 
 ---
 
-## 🛒 Frontend — Customer Storefront
+## 🛒 Frontend: Customer Storefront
 
 **Tech**: Next.js 15.3 · React 19 · Tailwind CSS · Turbopack · TypeScript  
 **Port**: `8000`  
@@ -118,7 +118,7 @@ yarn analyze      # Bundle analyzer
 
 ---
 
-## ⚙️ Backend — Platform API
+## ⚙️ Backend : Platform API
 
 **Tech**: Fastify 5 · Drizzle ORM · PostgreSQL · Redis · Stripe · TypeScript  
 **Port**: `9000`  
@@ -354,7 +354,7 @@ npm run start     # Production server
 
 ---
 
-## 🤖 AI Chat Service — Shopping Assistant
+## 🤖 AI Chat Service : Shopping Assistant
 
 **Tech**: FastAPI · Google Gemini (gemini-3-flash-preview) · Python  
 **Port**: `5050`
